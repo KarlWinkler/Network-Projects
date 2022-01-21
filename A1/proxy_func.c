@@ -5,17 +5,31 @@
 
 #define STRING_WORDS 2000
 
-char* replace_words(char string[STRING_WORDS]){
-    for(int i = 0; i < STRING_WORDS; i++){
-        if(strcmp(string[i], "\n\r\n\r") == 0){ // \n\r\n\r is EOF
-            break; // exit loop
-        }
+// char* replace_words(char string[STRING_WORDS]){
+//     for(int i = 0; i < STRING_WORDS; i++){
+//         if(strcmp(string[i], "\n\r\n\r") == 0){ // \n\r\n\r is EOF
+//             break; // exit loop
+//         }
 
-        if(strcmp(string[i], "Happy") == 0){
-            strcpy(string[i], "Silly");
-        }
+//         if(strcmp(string[i], "Happy") == 0){
+//             strcpy(string[i], "Silly");
+//         }
+//     }
+// }
 
+char* get_header_contents(char* message, char* header){
+    // message should be the HTTP message
+    // header should be in the form "Header: "
 
+    char* res; // gets the header 
 
+    if((res = strstr(message, header)) == NULL){
+        return NULL;
     }
+
+    res = strtok(res, "\n\r"); // finds end of header
+
+    res = res+strlen(header);  // moves pointer to the start of contents    
+
+    return res;
 }
