@@ -1,0 +1,10 @@
+** Clown Proxy by Karl Winkler **
+
+How to use:
+
+set up proxy on localhost port 8080
+
+RUN cc -Wall -o proxy proxy.c
+RUN ./proxy
+
+The proxy uses HTTP 1.1 
