@@ -1,10 +1,28 @@
-** Clown Proxy by Karl Winkler **
+** HTTP/1.1 Clown Proxy by Karl Winkler **
+** January 27, 2022 **
 
-How to use:
+** Description **
+This proxy will replace the following words in any HTML file requested by 
+an HTTP page using this proxy:
+happy -> silly 
+Happy -> Silly
 
-set up proxy on localhost port 8080
+The proxy will also change jpeg images to one of the three png images
+included in this directory.
 
-RUN cc -Wall -o proxy proxy.c
+** How to use **
+
+set up your system to use the proxy on port 8080
+from the IP you are running it from.
+
+eg. 127.0.0.1 8080
+
+RUN cc -o proxy proxy.c
 RUN ./proxy
 
-The proxy uses HTTP 1.1 
+Don't forget to disable the proxy when you are done using it.
+
+
+debug notes:
+- Make sure your browser doesn't redirect HTTP to HTTPS
+- Make sure the cache is cleared or disabled entirely 
