@@ -1,4 +1,4 @@
-// HTTP/1.1 proxy
+// HTTP/1.1 proxy_func.c
 // Author: Karl Winkler
 // Date: Jan. 27, 2022
 
