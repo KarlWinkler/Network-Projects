@@ -1,3 +1,7 @@
+// HTTP/1.1 proxy
+// Author: Karl Winkler
+// Date: Jan. 27, 2022
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
