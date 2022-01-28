@@ -10,14 +10,12 @@
 #include "proxy_func.c"
 
 /* Global manifest constants */
-#define MAX_MESSAGE_LENGTH 5068
-#define REPLY "message received\n"
-#define MY_PORT_NUM 8080         /* you can change this if you want! */
+#define MAX_MESSAGE_LENGTH 5068     // maximum length for most char *
+#define MY_PORT_NUM 8080            // port proxy runns on
 
 /* Main program for proxy */
 int main(int argc, char *argv[]){
     char message_in[MAX_MESSAGE_LENGTH], server_reply[MAX_MESSAGE_LENGTH];
-    // char* proxy_response = REPLY;
     struct sockaddr_in client;
     struct sockaddr_in proxy;
     struct sockaddr_in server;
@@ -46,7 +44,7 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-
+    // listen for connections
     if(listen(accept_socket, 1) != 0){
         puts("listen failed");
         exit(1);
@@ -58,14 +56,18 @@ int main(int argc, char *argv[]){
     while(1){
 
         name_len = sizeof(client);
+        //create connection
         if((client_socket = accept(accept_socket, (struct sockaddr *)&client, &name_len)) < 0){
             puts("accept failed");
             exit(1);
         }
 
+        // create child process
         pid = fork();
 
+        // if this is the child process
         if(pid == 0){
+            // we dont need this socket anymore
             close(accept_socket);
 
             // receive message from client
@@ -87,8 +89,6 @@ int main(int argc, char *argv[]){
 
             struct hostent *address;
             address = gethostbyname(host);
-
-            //printf("%s", host);
 
             bcopy((char *)address->h_addr, (char *)&server.sin_addr.s_addr, address->h_length);
             // server.sin_addr.s_addr = inet_addr();
@@ -122,22 +122,29 @@ int main(int argc, char *argv[]){
                 char temp[MAX_MESSAGE_LENGTH];
                 strcpy(temp, server_reply);
                 char* content_type = get_header_contents(temp, "Content-Type: ");
-                // puts(server_reply);
+                //make sure that the packet actually has a content type header
                 if(content_type != NULL){
+                    // text/html; charset=UTF-8 is the return value for an html file
                     if(strcmp(content_type, "text/html; charset=UTF-8") == 0){
-                        
                         do_the_funny(server_reply);
                     }
+                    // for jpeg
                     else if(strcmp(content_type, "image/jpeg") == 0){
-
+                        // response is needed so I can strcat() 
+                        // everything together for random images to work 
+                        // other variables will be assigened based on the 
+                        // current time in microseconds
                         char response[100];
                         char img_name[16];
                         char img_size[16];
                         int rand_val;
+                        // for storing the result of gettimeofday
                         struct timeval rand;
 
+                        //get time as microseconds since unix epoch
                         gettimeofday(&rand, NULL);
 
+                        // assign values at "random" to get images
                         if((rand_val = rand.tv_usec % 3) == 0){
                             strcpy(img_name, "clown.png");
                             strcpy(img_size, "52930");
@@ -151,17 +158,20 @@ int main(int argc, char *argv[]){
                             strcpy(img_size, "24761");
                         }
                         
+                        // start of response
                         char * start = "HTTP/1.1 200 OK\r\nContent-Length: ";
                         
+                        // glue everything together
                         strcat(response, start);
                         strcat(response, img_size);
                         strcat(response, "\r\nConnection: close\r\nContent-Type: image/jpg\r\n\r\n");
+                        // FORMAT:
                         // HTTP/1.1 200 OK
                         // Content-Length: 421
                         // Connection: close
                         // Content-Type: text/html; charset=UTF-8
                         
-                        
+                        // return header response to client (I send the rest later)
                         if(send(client_socket, response, strlen(response), 0) < 0){
                             puts("message to server failed");
                             exit(1);
@@ -183,26 +193,32 @@ int main(int argc, char *argv[]){
                                 exit(1);
                             }
                         }
+                        // don't try to recieve or send anymore (we are done)
                         break;
                     }
                 }
 
+                // send to client if it is not replacing a jpeg
                 if(send(client_socket, server_reply, package_size, 0) < 0){
                     puts("return to client failed");
                     exit(1);
                 }
-                bzero(server_reply, sizeof(server_reply)); // clear string
+                //clear string so we dont corrupt them
+                bzero(server_reply, sizeof(server_reply));
                 // sleep(0.01);
             }
-
+            
+            // we dont need this socket anymore
             close(client_socket);
+            // kill the child process
             exit(0);
             
         }
 
     }
 
-    puts("conection ended"); // shouldnt ever really reach here I think
+    // shouldnt ever really reach here I think
+    puts("conection ended"); 
     return 0;
     
 
