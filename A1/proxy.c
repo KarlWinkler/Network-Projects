@@ -1,3 +1,7 @@
+// HTTP/1.1 proxy
+// Author: Karl Winkler
+// Date: Jan. 27, 2022
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -145,6 +149,8 @@ int main(int argc, char *argv[]){
                         gettimeofday(&rand, NULL);
 
                         // assign values at "random" to get images
+                        // yeah, I hardcoded the image size
+                        // its already in the issues
                         if((rand_val = rand.tv_usec % 3) == 0){
                             strcpy(img_name, "clown.png");
                             strcpy(img_size, "52930");
