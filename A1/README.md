@@ -17,7 +17,7 @@ included in this directory.
 set up your system to use the proxy on port 8080
 from the IP you are running it from.
 
-eg. 127.0.0.1 8080
+eg. IP: 127.0.0.1 PORT: 8080
 
 RUN cc -o proxy proxy.c
 
