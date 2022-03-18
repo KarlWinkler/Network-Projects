@@ -1,0 +1,49 @@
+# I made this so that anyone can easily test a basic rundown of the test files
+# feel free to uncomment debug code at the end of main to get a more descriptive 
+# result
+
+# ./router soccer.txt 
+# ./router soccer.txt 300
+# ./router -c soccer.txt zoom.txt 
+
+
+# compile code
+gcc -Wall -o router-sim router.c
+# testing soccer.txt for buffer size
+./router-sim soccer.txt 100 5000000
+./router-sim soccer.txt 200 5000000
+./router-sim soccer.txt 300 5000000
+./router-sim soccer.txt 400 5000000
+./router-sim soccer.txt 500 5000000
+./router-sim soccer.txt 600 5000000
+./router-sim soccer.txt 700 5000000
+./router-sim soccer.txt 800 5000000
+./router-sim soccer.txt 900 5000000
+./router-sim soccer.txt 1000 5000000
+# testing zoom.txt for buffer size
+./router-sim zoom.txt 100 5000000
+./router-sim zoom.txt 200 5000000
+./router-sim zoom.txt 300 5000000
+./router-sim zoom.txt 400 5000000
+./router-sim zoom.txt 500 5000000
+./router-sim zoom.txt 600 5000000
+./router-sim zoom.txt 700 5000000
+./router-sim zoom.txt 800 5000000
+./router-sim zoom.txt 900 5000000
+./router-sim zoom.txt 1000 5000000
+# testing soccer.txt for bandwidth
+./router-sim soccer.txt 100 6000000
+./router-sim soccer.txt 100 8000000
+./router-sim soccer.txt 100 10000000
+# testing zoom.txt for bandwidth
+./router-sim zoom.txt 100 6000000
+./router-sim zoom.txt 100 8000000
+./router-sim zoom.txt 100 10000000
+#testing double input
+./router -c starwars.txt soccer.txt 100 5000000
+./router -c starwars.txt soccer.txt 100 6000000
+./router -c starwars.txt soccer.txt 100 8000000
+./router -c starwars.txt soccer.txt 100 10000000
+./router -c starwars.txt soccer.txt 100 12000000
+./router -c starwars.txt soccer.txt 100 15000000
+./router -c starwars.txt soccer.txt 100 20000000

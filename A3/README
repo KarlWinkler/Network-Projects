@@ -1,0 +1,23 @@
+# Router Buffering
+
+NAME
+    ./router
+
+SYNOPSYS
+    ./router [OPTION]... [FILE]... (OPTIONAL)[BUFFER_SIZE] [BANDWIDTH]
+
+DESCRIPTION
+    This program simulates a router with a given bandwidth and buffer size
+
+    -c 
+        combine two files to run throught the buffer at the same time
+
+RUN EXAMPLES
+    sample run tests can be found in runfile found in this directory
+
+AUTHOR
+    Written by Karl Winkler
+
+REPORTING BUGS
+    Project github <https://github.com/KarlWinkler/Network-Projects/issues>
+    with apropriate project name.    
