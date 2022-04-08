@@ -1,2 +1,18 @@
-gcc -Wall -o sim main.c
-./sim
+Bozon - assignment 4
+
+To run the code, either use
+$ make 
+$ ./sim [bozons] [mean sleep] [mean yodel] 
+
+or 
+
+edit the make file by uncommenting the ./sim lines
+and run $ make. This allows you to run many tests very easily
+and see all of the results.
+
+if you want to see a less verbose output, comment out the 
+print lines at the end of main.c and uncomment the last print statement
+was originally commented. 
+
+Testing was performed on Ubuntu on my personal computer and everything 
+worked including the bonus.

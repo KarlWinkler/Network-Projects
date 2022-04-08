@@ -30,17 +30,17 @@ struct bozon *generate_bozons(int len){
    return bozons;
 }  
 
-void evaluate_state(struct bozon *b, double wake_chance, double mean_yodel, int *active){
+void evaluate_state(struct bozon *b, double sleep_time, double mean_yodel, int *active){
     double rand = Uniform01();
     
 
     if(b->state == 0){
-        if(rand < wake_chance){
+        if(rand < sleep_time){
 
             b->state = 1;
             b->interupted = 0;
             b->time = ceil(Exponential(mean_yodel));
-            // b->yodels_made++;
+            b->yodels_made++;
             (*active)++;
         }   
     }
@@ -49,21 +49,24 @@ void evaluate_state(struct bozon *b, double wake_chance, double mean_yodel, int 
         if(b->interupted == 0){
             b->perfect_yodels++;
         }
+        b->time = ceil(Exponential(sleep_time));
         (*active)--;
     }
 
 }
 
 int main(int argc, char* argv[]){
+
     int num_bozons = 1; 
-    float mean_yodel = 10, percent_active = 10;
+    float mean_yodel = 10, mean_sleep = 10;
     time_t t;
 
     int active_yodelers = 0;
-    int melodious_time = 0;
-    int screaching = 0;
-    int perfect_yodels = 0;
-    int total_yodels = 0;
+    float melodious_time = 0;
+    float screaching = 0;
+    long perfect_yodels = 0;
+    long total_yodels = 0;
+    float silent_time = 0;
 
     srand((unsigned) time(&t));
 
@@ -72,28 +75,26 @@ int main(int argc, char* argv[]){
     }
 
     if(argc > 2){
-        percent_active = atof(argv[2]);
+        mean_sleep = atof(argv[2]);
     }
 
     if(argc > 3){
-        mean_yodel = atof(argv[2]);
+        mean_yodel = atof(argv[3]);
     }
+
+    //sleep_time = (1 - (percent_active / 100.0)) / ((percent_active / 100.0) / mean_yodel);
 
     struct bozon *bozons;
     bozons = generate_bozons(num_bozons);
-    double wake_chance =  ((percent_active / 100) * SIM_LEN) / mean_yodel / SIM_LEN;
 
     for(int i = 0; i < SIM_LEN; i++){
        for(int b = 0; b < num_bozons; b++){
             bozons[b].time--;
             if(bozons[b].time <= 0){
-                evaluate_state(&bozons[b], wake_chance, mean_yodel, &active_yodelers);
 
-        // printf("%d\n", active_yodelers);
+                evaluate_state(&bozons[b], mean_sleep, mean_yodel, &active_yodelers);
 
             }
-            // printf("%f \n", bozons[b].time);
-
         }
 
         if(active_yodelers > 1){
@@ -110,15 +111,27 @@ int main(int argc, char* argv[]){
         else if(active_yodelers > 1){
             screaching++;
         }
-
-        for(int b = 0; b < SIM_LEN; b++){
-            perfect_yodels += bozons[b].perfect_yodels;
-            total_yodels += bozons[b].yodels_made;
+        else{
+            silent_time++;
         }
+
     }
 
-    printf("%d, %f%%\n", melodious_time, (melodious_time / (double)SIM_LEN) * 100);
-    printf("%d, %f%%\n", screaching, (screaching / (double)SIM_LEN) * 100);
-    printf("%d, %f%%\n", screaching, (perfect_yodels / (double)total_yodels) * 100);
+    for(int b = 0; b < num_bozons; b++){
+        perfect_yodels += bozons[b].perfect_yodels;
+        total_yodels += bozons[b].yodels_made;
+    }
+
+    printf("monitored time: %d\n", SIM_LEN);
+    printf("Silent time: %f: %f%%\n", silent_time, (silent_time / (double)SIM_LEN) * 100);
+    printf("Melodious time: %f, %f%%\n", melodious_time, (melodious_time / (double)SIM_LEN) * 100);
+    printf("Screach time: %f, %f%%\n", screaching, (screaching / (double)SIM_LEN) * 100);
+    // printf("Attempted yodels: %d, %f%%\n", silent_time, (silent_time / (double)SIM_LEN) * 100);
+
+    printf("perfect yodels: %ld/total yodels: %ld, %f%%\n", perfect_yodels, total_yodels, (perfect_yodels / (double)total_yodels) * 100);
     
+    // printf("%f\n%f\n%f\n%f\n%ld\n", (silent_time / (double)SIM_LEN) * 100, (melodious_time / (double)SIM_LEN) * 100, (screaching / (double)SIM_LEN) * 100, (perfect_yodels / (double)total_yodels) * 100, total_yodels);
+
+
+
 }
